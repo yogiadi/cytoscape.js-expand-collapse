@@ -1,0 +1,159 @@
+<!DOCTYPE>
+
+<html>
+
+	<head>
+		<title>cytoscape-expand-collapse.js demo</title>
+
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+                <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<script src="https://unpkg.com/cytoscape@3.1.0/dist/cytoscape.min.js"></script>
+
+		<!-- for testing with local version of cytoscape.js -->
+		<!--<script src="../cytoscape.js/build/cytoscape.js"></script>-->
+		<script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cose-bilkent/2.0.4/cytoscape-cose-bilkent.js"></script>
+		<script src="cytoscape-expand-collapse.js"></script>
+
+
+		<style>
+			body {
+				font-family: helvetica neue, helvetica, liberation sans, arial, sans-serif;
+				font-size: 14px;
+			}
+
+			#cy {
+				z-index: 999;
+				width: 85%;
+				height: 85%;
+				float: left;
+			}
+
+			h1 {
+				opacity: 0.5;
+				font-size: 1em;
+				font-weight: bold;
+			}
+		</style>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function(){
+
+				var cy = window.cy = cytoscape({
+					container: document.getElementById('cy'),
+
+					layout: {
+						name: 'cose-bilkent'
+					},
+
+					style: [
+						{
+							selector: 'node',
+							style: {
+								'background-color': '#ad1a66'
+							}
+						},
+						    {
+								"selector": "node[label]",
+								"style": {
+								"label": "data(label)"
+								}
+							},
+
+						{
+							selector: ':parent',
+							style: {
+								'background-opacity': 0.333
+							}
+						},
+
+						{
+							selector: "node.cy-expand-collapse-collapsed-node",
+							style: {
+								"background-color": "darkblue",
+								"shape": "rectangle"
+							}
+						},
+
+						{
+							selector: 'edge',
+							style: {
+								'width': 3,
+								'line-color': '#ad1a66'
+							}
+						},
+
+						{
+							selector: 'edge.meta',
+							style: {
+								'width': 2,
+								'line-color': 'red'
+							}
+						},
+
+						{
+							selector: ':selected',
+							style: {
+							  "border-width": 3,
+								"border-color": '#DAA520'
+							}
+						}
+					],
+
+					elements: [
+						{"data":{"id":"node1","label":""},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"id":"node2","label":"pkg1","parent":"node1"},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"id":"node3","label":"pkg1","parent":"node2"},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"id":"node4","label":"prc1","parent":"node2"},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"id":"node5","label":""},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"id":"node6","label":"pkg1","parent":"node5"},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"id":"node7","label":"pkg1","parent":"node6"},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"id":"node8","label":"prc1","parent":"node6"},"position":{"x":0,"y":0},"group":"nodes","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""},
+						{"data":{"source":"node4","target":"node8","id":"node44"},"position":{},"group":"edges","removed":false,"selected":false,"selectable":true,"locked":false,"grabbable":true,"classes":""}
+					]
+				});
+
+				var api = cy.expandCollapse({
+					layoutBy: {
+						name: "cose-bilkent",
+						// animate: "end",
+						randomize: false,
+						fit: true
+					},
+					fisheye: true,
+					// animate: true,
+					undoable: false
+				});
+
+
+				document.getElementById("collapseRecursively").addEventListener("click", function () {
+					api.collapseRecursively(cy.$(":selected"));
+				});
+
+				document.getElementById("expandRecursively").addEventListener("click", function () {
+					api.expandRecursively(cy.$(":selected"));
+				});
+
+				document.getElementById("collapseAll").addEventListener("click", function () {
+					api.collapseAll();
+				});
+
+				document.getElementById("expandAll").addEventListener("click", function () {
+					api.expandAll();
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+		<h1>cytoscape-expand-collapse demo</h1>
+
+			<b id="collapseAll" style="cursor: pointer;color: darkred">Collapse all</b> / <b id="expandAll" style="cursor: pointer; color: darkslateblue">Expand all</b> <br/>
+			<b id="collapseRecursively" style="cursor: pointer; color: darksalmon">Collapse selected recursively</b> / <b id="expandRecursively" style="cursor: pointer; color: darkmagenta">Expand selected recursively</b>
+
+		<div id="cy"></div>
+
+	</body>
+
+</html>
